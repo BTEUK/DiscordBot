@@ -1,0 +1,31 @@
+{
+  "name": "discordbot",
+  "version": "1.0.0",
+  "description": "BTEUK's Discord Bot",
+  "main": "index.js",
+  "repository": "https://github.com/BTEUK/DiscordBot.git",
+  "author": "Striker <me@strikerfrfx.dev>",
+  "scripts": {
+    "start": "cd dist && node index",
+    "build": "tsc && devScript --copyOnly && npm prune --production",
+    "dev": "devScript"
+  },
+  "dependencies": {
+    "@types/debug": "^4.1.7",
+    "@types/node": "^17.0.6",
+    "@typescript-eslint/eslint-plugin": "^5.9.0",
+    "@typescript-eslint/parser": "5.0.0",
+    "axios": "^0.25.0",
+    "debug": "^4.3.3",
+    "discord-module-loader": "^1.0.0",
+    "discord.js": "^13.6.0",
+    "dotenv": "^10.0.0",
+    "moment": "^2.29.1",
+    "prettier": "^2.5.1",
+    "rimraf": "^3.0.2",
+    "source-map-support": "0.5.21",
+    "ts-devscript": "^3.0.6",
+    "tsutils": "^3.21.0",
+    "typescript": "^4.5.5"
+  }
+}
