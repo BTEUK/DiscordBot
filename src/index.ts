@@ -6,19 +6,19 @@ import "source-map-support/register";
 import debug from "debug";
 import { Client } from "discord.js";
 import ModuleLoader from "discord-module-loader";
+import mysql from "mysql";
 
 if (!process.env.TOKEN) throw new Error("Please set the TOKEN environment variable");
 
-export const mainLog = debug("Bot");
+export const mainLog = debug("BTEUK");
 
-debug.enable("Bot*");
+debug.enable("BTEUK*");
 
-//* Create new client & set login presence
 export const client = new Client({
 		intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_MESSAGES", "GUILD_PRESENCES"],
 		presence: {
 			status: "online",
-			activities: [{ name: "for slash commands!", type: "WATCHING" }]
+			activities: [{ name: "coming soon.", type: "PLAYING" }]
 		}
 	}),
 	moduleLoader = new ModuleLoader(client);
@@ -37,4 +37,26 @@ async function run() {
 	mainLog("Connected to Discord");
 }
 
+async function dbInit() {
+	const conn = mysql.createConnection({
+		host: process.env.DBHOST,
+		user: process.env.DBUSER,
+		password: process.env.DBPASS,
+		port: 3306,
+		database: "minecraft_publicbuilds"
+	});
+
+	console.log(conn);
+
+	conn.connect(err => {
+		if (err) throw err;
+		console.log("Connected!");
+		conn.query("SELECT COUNT(id) FROM plot_data WHERE status='submitted';", (err, results) => {
+			if (err) throw err;
+			console.log(results);
+		});
+	});
+}
+
 run();
+dbInit();
