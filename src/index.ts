@@ -59,27 +59,10 @@ async function plotStatus() {
 	conn.query("SELECT COUNT(id) FROM plot_data WHERE status='submitted';", async (err, results) => {
 		plots = results[0]["COUNT(id)"];
 		mainLog(`${plots} waiting to be reviewed`);
-		plots = results[0]["COUNT(id)"];
-		if (plots == 1) {
-			const plotEmbed = new MessageEmbed({
-				description: `There is ${plots} plot waiting to be reviewed`,
-				color: "ORANGE"
-			});
-		} else {
-			const plotEmbed = new MessageEmbed({
-				description: `There are ${plots} plots waiting to be reviewed`,
-				color: "ORANGE"
-			});
-		}
 
 		const g = await client.guilds.fetch("693879304605401110");
 		const c = (await g.channels.fetch("800771847964065793")) as TextChannel;
-		c.send({ embeds: [plotEmbed] });
-		if (plots == 1) {
-			c.setTopic(`There is ${plots} plot waiting to be reviewed`);
-		} else {
-			c.setTopic(`There are ${plots} plots waiting to be reviewed`);
-		}
+		plots == 1 ? c.setTopic(`There is ${plots} plot waiting to be reviewed`) : c.setTopic(`There are ${plots} plots waiting to be reviewed`);
 	});
 
 	setInterval(() => {
@@ -89,17 +72,7 @@ async function plotStatus() {
 			if (results[0]["COUNT(id)"] == plots) return mainLog("Plots amount the same, not updating.");
 			else {
 				plots = results[0]["COUNT(id)"];
-				if (plots == 1) {
-					const plotEmbed = new MessageEmbed({
-						description: `There is ${plots} plot waiting to be reviewed`,
-						color: "ORANGE"
-					});
-				} else {
-					const plotEmbed = new MessageEmbed({
-						description: `There are ${plots} plots waiting to be reviewed`,
-						color: "ORANGE"
-					});
-				}
+				const plotEmbed = plots == 1 ? new MessageEmbed({description: `There is ${plots} plot waiting to be reviewed`, color: "ORANGE"}) : new MessageEmbed({description: `There are ${plots} plots waiting to be reviewed`, color: "ORANGE"});
 
 				const g = await client.guilds.fetch("693879304605401110");
 				const c = (await g.channels.fetch("944328044158537849")) as TextChannel;
