@@ -4,13 +4,20 @@ config({ path: "../.env" });
 import "source-map-support/register";
 
 import debug from "debug";
-import { Client } from "discord.js";
+import { Client, MessageEmbed, TextChannel } from "discord.js";
 import ModuleLoader from "discord-module-loader";
 import mysql from "mysql";
 
 if (!process.env.TOKEN) throw new Error("Please set the TOKEN environment variable");
 
 export const mainLog = debug("BTEUK");
+const conn = mysql.createConnection({
+	host: process.env.DBHOST,
+	user: process.env.DBUSER,
+	password: process.env.DBPASS,
+	port: 3306,
+	database: "minecraft_publicbuilds"
+});
 
 debug.enable("BTEUK*");
 
@@ -38,25 +45,53 @@ async function run() {
 }
 
 async function dbInit() {
-	const conn = mysql.createConnection({
-		host: process.env.DBHOST,
-		user: process.env.DBUSER,
-		password: process.env.DBPASS,
-		port: 3306,
-		database: "minecraft_publicbuilds"
-	});
-
 	console.log(conn);
 
 	conn.connect(err => {
 		if (err) throw err;
 		console.log("Connected!");
-		conn.query("SELECT COUNT(id) FROM plot_data WHERE status='submitted';", (err, results) => {
-			if (err) throw err;
-			console.log(results);
-		});
 	});
+}
+
+async function plotStatus() {
+	let plots: Number;
+	mainLog("Querying Database...");
+	conn.query("SELECT COUNT(id) FROM plot_data WHERE status='submitted';", async (err, results) => {
+		plots = results[0]["COUNT(id)"];
+		mainLog(`${plots} waiting to be reviewed`);
+		plots = results[0]["COUNT(id)"];
+		const plotEmbed = new MessageEmbed({
+			description: `There are ${plots} plots waiting to be reviewed`,
+			color: "ORANGE"
+		});
+
+		const g = await client.guilds.fetch("693879304605401110");
+		const c = (await g.channels.fetch("944328044158537849")) as TextChannel;
+		c.send({ embeds: [plotEmbed] });
+		c.setTopic(`There are ${plots} plots waiting to be reviewed`);
+	});
+
+	setInterval(() => {
+		conn.query("SELECT COUNT(id) FROM plot_data WHERE status='submitted';", async (err, results) => {
+			if (err) throw err;
+			mainLog("Querying Database...");
+			if (results[0]["COUNT(id)"] == plots) return mainLog("Plots amount the same, not updating.");
+			else {
+				plots = results[0]["COUNT(id)"];
+				const plotEmbed = new MessageEmbed({
+					description: `There are ${plots} plots waiting to be reviewed`,
+					color: "ORANGE"
+				});
+
+				const g = await client.guilds.fetch("693879304605401110");
+				const c = (await g.channels.fetch("944328044158537849")) as TextChannel;
+				c.send({ embeds: [plotEmbed] });
+				c.setTopic(`There are ${plots} plots waiting to be reviewed`);
+			}
+		});
+	}, 36000000);
 }
 
 run();
 dbInit();
+plotStatus();
