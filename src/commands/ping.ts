@@ -14,9 +14,9 @@ export default new DiscordCommand({
 			onlineSince = Math.round(int.client.readyTimestamp! / 1000);
 
 		let colors = {
-				green: "",
-				orange: "",
-				red: ""
+				green: "#00ff00",
+				orange: "#ffa500",
+				red: "#ff0000"
 			},
 			color;
 
