@@ -66,7 +66,7 @@ async function plotStatus() {
 		});
 
 		const g = await client.guilds.fetch("693879304605401110");
-		const c = (await g.channels.fetch("944328044158537849")) as TextChannel;
+		const c = (await g.channels.fetch("800771847964065793")) as TextChannel;
 		c.send({ embeds: [plotEmbed] });
 		c.setTopic(`There are ${plots} plots waiting to be reviewed`);
 	});
