@@ -25,7 +25,7 @@ export const client = new Client({
 		intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_MESSAGES", "GUILD_PRESENCES"],
 		presence: {
 			status: "online",
-			activities: [{ name: "coming soon.", type: "PLAYING" }]
+			activities: [{ name: "BTE UK", type: "PLAYING" }]
 		}
 	}),
 	moduleLoader = new ModuleLoader(client);
@@ -89,7 +89,7 @@ async function plotStatus() {
 				c.setTopic(`There are ${plots} plots waiting to be reviewed`);
 			}
 		});
-	}, 36000000);
+	}, 900000);
 }
 
 run();
