@@ -77,11 +77,7 @@ async function plotStatus() {
 				const g = await client.guilds.fetch("693879304605401110");
 				const c = (await g.channels.fetch("944328044158537849")) as TextChannel;
 				c.send({ embeds: [plotEmbed] });
-				if (plots == 1) {
-					c.setTopic(`There is ${plots} plot waiting to be reviewed`);
-				} else {
-					c.setTopic(`There are ${plots} plots waiting to be reviewed`);
-				}
+				plots == 1 ? c.setTopic(`There is ${plots} plot waiting to be reviewed`) : c.setTopic(`There are ${plots} plots waiting to be reviewed`);
 			}
 		});
 	}, 900000);
