@@ -1,5 +1,5 @@
 import { config } from "dotenv";
-config({ path: "../.env" });
+config({ path: "/home/container/.env" });
 
 import "source-map-support/register";
 
